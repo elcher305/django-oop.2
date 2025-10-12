@@ -68,6 +68,7 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'catalog.AdvUser'
 WSGI_APPLICATION = 'design.wsgi.application'
 
 
