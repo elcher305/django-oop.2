@@ -3,7 +3,7 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from .models import AdvUser
 from django.core.validators import RegexValidator
-
+from .models import Application
 
 class ChangeUserInfoForm(forms.ModelForm):
    email = forms.EmailField(required=True, label='Адрес электронной почты')
@@ -11,6 +11,31 @@ class ChangeUserInfoForm(forms.ModelForm):
    class Meta:
        model = AdvUser
        fields = ('username', 'email', 'first_name', 'patronymic', 'last_name')
+
+
+class ApplicationForms(forms.ModelForm):
+    name = forms.CharField(required=True, label='Название')
+    description = forms.CharField(
+        label='Описание',
+        max_length=1000,
+        widget=forms.Textarea(attrs={'rows': 4, 'cols': 40})
+    )
+    LOAN_STATUS = (
+        ('n', 'Новая'),
+        ('o', 'Принята в работу'),
+        ('d', 'Выполнена'),
+
+    )
+    categories = forms.ChoiceField(
+        label='Категория',
+        choices=LOAN_STATUS,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    photo = forms.FileField(label='Фото')
+
+    class Meta:
+        model = Application
+        fields = ('name', 'description', 'categories', 'photo')
 
 class RegisterUserForm(forms.ModelForm):
     email = forms.EmailField(required=True, label='Адрес электронной почты', validators=[
@@ -82,4 +107,4 @@ class RegisterUserForm(forms.ModelForm):
 
     class Meta:
         model = AdvUser
-        fields = ('username', 'first_name', 'patronymic', 'last_name', 'email', 'password1', 'password2',)
+        fields = ('username', 'first_name', 'patronymic', 'last_name', 'email', 'password1', 'password2', 'consent')
