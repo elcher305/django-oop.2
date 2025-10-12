@@ -9,6 +9,7 @@ from .views import RegisterUserView
 app_name = 'catalog'
 
 urlpatterns = [
+
     path('', views.index, name='index'),
     path('accounts/login', BBLoginView.as_view(), name='login'),
     path('accounts/profile/', profile, name='profile'),

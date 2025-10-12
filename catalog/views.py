@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
@@ -8,6 +8,7 @@ from django.views.generic import CreateView
 from .forms import RegisterUserForm
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
+
 
 def index(request):
     return render(request, 'index.html')
