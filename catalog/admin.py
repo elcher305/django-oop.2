@@ -3,7 +3,12 @@ from .models import AdvUser
 from .models import Categories
 from .models import Application
 
+
 admin.site.register(AdvUser)
 admin.site.register(Categories)
-admin.site.register(Application)
 
+
+@admin.register(Application)
+class ApplicationAdmin(admin.ModelAdmin):
+    model = Application
+    list_display = ( 'name', 'description', 'photo',)

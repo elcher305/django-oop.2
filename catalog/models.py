@@ -1,16 +1,15 @@
 from django.db import models
-
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 
 class AdvUser(AbstractUser):
-    first_name = models.CharField(max_length=100, blank=True, verbose_name='Имя')
-    patronymic = models.CharField(max_length=100, blank=True, verbose_name='Отчество')
-    last_name = models.CharField(max_length=100, blank=True, verbose_name='Фамилия')
+   first_name = models.CharField(max_length=100, blank=True, verbose_name='Имя')
+   patronymic = models.CharField(max_length=100, blank=True, verbose_name='Отчество')
+   last_name = models.CharField(max_length=100, blank=True, verbose_name='Фамилия')
 
-    class Meta(AbstractUser.Meta):
-        pass
-
+   class Meta(AbstractUser.Meta):
+       pass
 
 class Categories(models.Model):
     name = models.CharField(max_length=200, help_text="Введите название категории")
@@ -20,10 +19,11 @@ class Categories(models.Model):
 
 
 class Application(models.Model):
-    name = models.CharField(max_length=100, blank=True, verbose_name='Название')
+    date = models.DateField(null=True, blank=True)
+    name = models.CharField(max_length=100, verbose_name='Название')
     description = models.TextField(max_length=1000, help_text="Описание")
     categories = models.ManyToManyField(Categories, help_text="Выберите категорию")
-    photo = models.FileField(upload_to ='uploads/')
+    photo = models.FileField(upload_to='photos/')
 
     LOAN_STATUS = (
         ('n', 'Новая'),
@@ -33,3 +33,4 @@ class Application(models.Model):
     )
 
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='n', help_text='Статус заявки')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, verbose_name='Пользователь')
