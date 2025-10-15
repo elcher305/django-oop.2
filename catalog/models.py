@@ -8,8 +8,6 @@ class AdvUser(AbstractUser):
    patronymic = models.CharField(max_length=100, blank=True, verbose_name='Отчество')
    last_name = models.CharField(max_length=100, blank=True, verbose_name='Фамилия')
 
-   class Meta(AbstractUser.Meta):
-       pass
 
 class Categories(models.Model):
     name = models.CharField(max_length=200, help_text="Введите название категории")

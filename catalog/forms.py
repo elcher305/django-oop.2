@@ -74,7 +74,7 @@ class RegisterUserForm(forms.ModelForm):
     class Meta:
         model = AdvUser
         fields = ('username', 'first_name', 'patronymic', 'last_name', 'email', 'password1',
-                  'password2','consent')
+                  'password2',  'consent')
 
 
 class ApplicationForm(forms.ModelForm):
@@ -83,10 +83,7 @@ class ApplicationForm(forms.ModelForm):
     )
     class Meta:
         model = Application
-        fields = ('name', 'description', 'categories', 'photo')
-        widgets = {
-            'categories': forms.CheckboxSelectMultiple,  # или SelectMultiple
-        }
+        fields = ( 'name', 'description', 'categories', 'photo')
 
     def clean_photo(self):
         photo = self.cleaned_data.get('photo')
@@ -102,8 +99,4 @@ class ApplicationForm(forms.ModelForm):
         application = super().save(commit=False)
         application.user = self.user
 
-        if commit:
-            application.save()
-            self.save_m2m()
-        return application
 

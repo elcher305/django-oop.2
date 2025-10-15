@@ -8,7 +8,6 @@ from django.views.generic import CreateView
 from .forms import RegisterUserForm
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
-
 from .forms import ApplicationForm
 from .models import Application
 
@@ -41,7 +40,6 @@ class RegisterUserView(CreateView):
     template_name = 'registration/register_user.html'
     form_class = RegisterUserForm
     success_url = reverse_lazy('catalog:register_done')
-
 
 
 class RegisterDoneView(TemplateView):
