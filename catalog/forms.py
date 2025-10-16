@@ -74,16 +74,17 @@ class RegisterUserForm(forms.ModelForm):
     class Meta:
         model = AdvUser
         fields = ('username', 'first_name', 'patronymic', 'last_name', 'email', 'password1',
-                  'password2',  'consent')
+                  'password2', 'consent')
 
 
 class ApplicationForm(forms.ModelForm):
     categories = forms.ModelMultipleChoiceField(
         queryset=Categories.objects.all(),
     )
+
     class Meta:
         model = Application
-        fields = ( 'name', 'description', 'categories', 'photo')
+        fields = ( 'name', 'description', 'categories', 'photo', )
 
     def clean_photo(self):
         photo = self.cleaned_data.get('photo')
@@ -100,3 +101,16 @@ class ApplicationForm(forms.ModelForm):
         application.user = self.user
 
 
+class ApplicationAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = Application
+        fields = ('status', 'categories', 'photo', 'comment', )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        status = cleaned_data.get('status')
+        user = self.instance.user
+
+
+        return cleaned_data

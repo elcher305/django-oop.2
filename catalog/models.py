@@ -9,6 +9,10 @@ class AdvUser(AbstractUser):
    last_name = models.CharField(max_length=100, blank=True, verbose_name='Фамилия')
 
 
+   class Meta(AbstractUser.Meta):
+       pass
+
+
 class Categories(models.Model):
     name = models.CharField(max_length=200, help_text="Введите название категории")
 
@@ -17,7 +21,7 @@ class Categories(models.Model):
 
 
 class Application(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(null=True, blank=True)
     name = models.CharField(max_length=100, verbose_name='Название')
     description = models.TextField(max_length=1000, help_text="Описание")
     categories = models.ManyToManyField(Categories, help_text="Выберите категорию")
@@ -27,8 +31,8 @@ class Application(models.Model):
         ('n', 'Новая'),
         ('o', 'Принята в работу'),
         ('d', 'Выполнена'),
-
     )
 
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='n', help_text='Статус заявки')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, verbose_name='Пользователь')
+    comment = models.TextField(null=True, blank=True, verbose_name='Комментарий администратора')

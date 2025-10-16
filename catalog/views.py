@@ -1,4 +1,6 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
@@ -9,12 +11,13 @@ from .forms import RegisterUserForm
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from .forms import ApplicationForm
+from .forms import ApplicationAdminForm
 from .models import Application
 
 
 def index(request):
     num_application_in_work = Application.objects.filter(status__exact='o').count()
-    applications = Application.objects.all()
+    applications = Application.objects.filter(status__exact='d').order_by('-date')[:4]
     return render(
         request,
         'index.html',
@@ -57,11 +60,17 @@ def create_application(request):
         form = ApplicationForm(user=request.user)
     return render(request, 'application/create_application.html', {'form': form})
 
+
 @login_required
 def delete_application(request, application_id):
     application = get_object_or_404(Application, id=application_id, user=request.user)
 
-    if application.status in ['o', 'd']:
+    if application.user != request.user:
+        messages.error(request, "У вас нет прав на удаление этой заявки.")
+        return redirect('catalog:profile')
+
+    if application.status != 'n':
+        messages.error(request, "Заявку нельзя удалить, так как её статус изменён.")
         return redirect('catalog:profile')
 
     if request.method == 'POST':
@@ -69,3 +78,27 @@ def delete_application(request, application_id):
         return redirect('catalog:profile')
 
     return render(request, 'application/delete_application.html', {'application': application})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def edit_application(request, application_id):
+    application = get_object_or_404(Application, id=application_id)
+    user = application.user
+    if request.method == 'POST':
+        form = ApplicationAdminForm(request.POST, request.FILES, instance=application)
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.save()
+            return redirect('catalog:admin_profile')
+    else:
+        form = ApplicationAdminForm(instance=application)
+
+    return render(request, 'application/edit_application.html', {'form': form, 'application': application})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def admin_profile(request):
+    applications = Application.objects.all()
+    return render(request, 'registration/admin_profile.html', {'applications': applications})

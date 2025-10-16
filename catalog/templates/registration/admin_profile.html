@@ -1,33 +1,9 @@
 {% extends "index.html" %}
-{% load bootstrap4 %}
-{% block title %} Профиль пользователя {% endblock %}
+{% block title %} Профиль администратора {% endblock %}
 {% block content %}
-<style>
-    .app-img {
-        height: 200px;
-        object-fit: cover;
-    }
-</style>
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Профиль пользователя {{ user.username }}</h2>
-            {% if user.first_name and user.last_name %}
-            <p>Здравствуйте, {{ user.first_name }} {{ user.last_name }} </p>
-            {% else %}
-            <p>Здравствуйте! </p>
-            {% endif %}
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <form action="{% url 'catalog:create_application' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">Создать заявку</button>
-            </form>
-        </div>
-    </div>
-    <h4>Мои заявки</h4>
+    <h2>Профиль администратора</h2>
+    <h4>Все заявки</h4>
     {% if applications %}
     <div class="row">
         {% for application in applications %}
@@ -42,9 +18,10 @@
                     <p class="card-text">{{ application.description }}</p>
                     <p class="card-text">Статус: {{ application.get_status_display }}</p>
                     <p class="card-text">Категории: {{ application.categories.all|join:', ' }}</p>
+                    <p class="card-text">Комментарий: {{ application.comment }}</p>
                 </div>
                 <div class="card-footer text-center">
-                    <a href="{% url 'catalog:delete_application' application.id %}">Удалить</a>
+                    <a href="{% url 'catalog:edit_application' application.id %}">Редактировать</a>
                 </div>
             </div>
         </div>
@@ -53,7 +30,7 @@
     {% else %}
     <div class="row">
         <div class="col-12">
-            <p class="text-center">У вас нет заявок.</p>
+            <p class="text-center">Нет заявок.</p>
         </div>
     </div>
     {% endif %}
