@@ -14,7 +14,7 @@ class AdvUser(AbstractUser):
 
 
 class Categories(models.Model):
-    name = models.CharField(max_length=200, help_text="Введите название категории")
+    name = models.TextField(max_length=200, help_text="Введите название категории")
 
     def __str__(self):
         return self.name

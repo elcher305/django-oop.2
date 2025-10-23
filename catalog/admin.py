@@ -11,4 +11,4 @@ admin.site.register(Categories)
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
     model = Application
-    list_display = ( 'name', 'description', 'photo',)
+    list_display = ( 'name', 'description', 'photo')

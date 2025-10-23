@@ -112,5 +112,4 @@ class ApplicationAdminForm(forms.ModelForm):
         status = cleaned_data.get('status')
         user = self.instance.user
 
-
         return cleaned_data
